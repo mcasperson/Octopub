@@ -37,7 +37,10 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: ./mvnw clean install --batch-mode -DskipTests
+              script: |
+                mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
+                ls -la ~/.m2/repository/io/quarkus
+                ./mvnw clean install --batch-mode -DskipTests
               workingDirectory: java
           - task: Bash@3
             inputs:
