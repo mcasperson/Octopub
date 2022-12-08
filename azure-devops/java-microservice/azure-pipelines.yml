@@ -22,6 +22,7 @@ stages:
           vmImage: 'ubuntu-latest'
         steps:
           - task: Bash@3
+            displayName: "Populate Local Maven Repo"
             inputs:
               targetType: inline
               script: |
@@ -34,17 +35,19 @@ stages:
                 # Set the last modified date to now to prevent Maven doing a pom lookup during build.
                 find ~/.m2/repository -exec touch -m {} +
           - task: Bash@3
+            displayName: "Install Libraries"
             inputs:
               targetType: inline
               script: ./mvnw clean install --batch-mode -DskipTests
               workingDirectory: java
           - task: Bash@3
+            displayName: "Build Application"
             inputs:
               targetType: inline
               script: ./mvnw clean package --batch-mode -DskipTests
               workingDirectory: java/products-microservice
-          - publish: '$(Agent.WorkFolder)/java/products-microservice/target/products-microservice-runner.jar'
-            displayName: 'Java JAR'
+          - publish: './java/products-microservice/target/products-microservice-runner.jar'
+            displayName: 'Capture Artifacts'
             artifact: javaJar
   - stage: deploy
     displayName: Deploy
