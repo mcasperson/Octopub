@@ -25,12 +25,13 @@ stages:
             inputs:
               targetType: inline
               script: |
+                # Download and extract a local maven repo cache. This speeds up build times. 
                 sudo apt-get update
                 sudo apt-get install -y p7zip-full
                 curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
                 mkdir -p ~/.m2
                 cd ~/.m2
-                7z e ~/repository.7z
+                7z e -aoa ~/repository.7z
               workingDirectory: java
           - task: Bash@3
             inputs:
