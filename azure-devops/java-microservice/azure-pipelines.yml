@@ -69,7 +69,7 @@ stages:
           - task: OctopusPush@5
             inputs:
               OctoConnectedServiceName: ${{ variables.OctopusServer }}
-              Space: ${{ variables.Octopus.Space }}
+              Space: ${{ variables.OctopusSpace }}
               Package: 'products-service.1.0.$(Build.BuildNumber).zip'
               Replace: 'true'
           - task: OctopusCreateRelease@5
