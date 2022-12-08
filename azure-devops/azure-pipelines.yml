@@ -1,0 +1,60 @@
+trigger:
+  - main
+  - master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: Octopus.Server
+    value: Octopus
+  - name: Octopus.Space
+    value: 'Spaces-1370'
+  - name: Octopus.Project
+    value: 'Projects-3448'
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - job: Install libraries
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: ./mvnw clean install
+              workingDirectory: java
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: ./mvnw clean package
+              workingDirectory: java/products-microservice
+          - task: OctopusPack@4
+            inputs:
+              PackageId: 'products-service'
+              PackageFormat: 'Zip'
+              PackageVersion: '1.0.$(Build.BuildNumber)'
+              SourcePath: 'java/products-microservice/target'
+              Include: 'products-microservice-runner.jar'
+              Overwrite: true
+          - task: OctopusPush@5
+            inputs:
+              OctoConnectedServiceName: ${{ Octopus.Server }}
+              Space: ${{ Octopus.Space }}
+              Package: 'products-service.1.0.$(Build.BuildNumber).zip'
+              Replace: 'true'
+          - task: OctopusCreateRelease@5
+            inputs:
+              OctoConnectedServiceName: ${{ Octopus.Server }}
+              Space: ${{ Octopus.Space }}
+              ProjectName: ${{ Octopus.Project }}
+              ReleaseNumber: '1.0.$(Build.BuildNumber)'
+          - task: OctopusDeployRelease@5
+            inputs:
+              OctoConnectedServiceName: ${{ Octopus.Server }}
+              Space: ${{ Octopus.Space }}
+              Project: ${{ Octopus.Project }}
+              ReleaseNumber: 'latest'
+              Environments: '1.0.$(Build.BuildNumber)'
