@@ -58,6 +58,9 @@ stages:
         steps:
           - download: current
             artifact: javaJar
+          - task: OctoInstaller@5
+            inputs:
+              version: '*'
           - task: OctopusPack@4
             inputs:
               PackageId: 'products-service'
