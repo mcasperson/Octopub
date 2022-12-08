@@ -28,6 +28,7 @@ stages:
                 # Download and extract a local maven repo cache. This speeds up build times. 
                 sudo apt-get update
                 sudo apt-get install -y p7zip-full
+                mvn help:evaluate -Dexpression=settings.localRepository
                 curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
                 mkdir -p $(Agent.WorkFolder)/.m2
                 cd $(Agent.WorkFolder)/.m2
