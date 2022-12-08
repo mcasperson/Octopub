@@ -25,21 +25,19 @@ stages:
             inputs:
               targetType: inline
               script: |
-                # Download and extract a local maven repo cache. This speeds up build times. 
-                sudo apt-get update
-                sudo apt-get install -y p7zip-full
-                mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
+                # Download and extract a local maven repo cache. This speeds up build times.
+                # Regenerate this by doing a "./mvnw install" and then "7z a repository.7z -r repository"                
                 curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
                 mkdir -p ~/.m2
                 cd ~/.m2
                 7z x -aoa ~/repository.7z
-                ls -la ~/.m2/repository/io/quarkus
+                # Verify we did this in the correct dir
+                echo "Local Maven repo"
+                mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
           - task: Bash@3
             inputs:
               targetType: inline
               script: |
-                mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
-                ls -la ~/.m2/repository/io/quarkus
                 ./mvnw clean install --batch-mode -DskipTests
               workingDirectory: java
           - task: Bash@3
