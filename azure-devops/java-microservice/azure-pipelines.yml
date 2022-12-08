@@ -6,11 +6,11 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  - name: Octopus.Server
+  - name: OctopusServer
     value: Octopus
-  - name: Octopus.Space
+  - name: OctopusSpace
     value: 'Spaces-1370'
-  - name: Octopus.Project
+  - name: OctopusProject
     value: 'Projects-3448'
 
 stages:
@@ -41,20 +41,20 @@ stages:
               Overwrite: true
           - task: OctopusPush@5
             inputs:
-              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
+              OctoConnectedServiceName: ${{ variables.OctopusServer }}
               Space: ${{ variables.Octopus.Space }}
               Package: 'products-service.1.0.$(Build.BuildNumber).zip'
               Replace: 'true'
           - task: OctopusCreateRelease@5
             inputs:
-              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
-              Space: ${{ variables.Octopus.Space }}
-              ProjectName: ${{ variables.Octopus.Project }}
+              OctoConnectedServiceName: ${{ variables.OctopusServer }}
+              Space: ${{ variables.OctopusSpace }}
+              ProjectName: ${{ variables.OctopusProject }}
               ReleaseNumber: '1.0.$(Build.BuildNumber)'
           - task: OctopusDeployRelease@5
             inputs:
-              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
-              Space: ${{ variables.Octopus.Space }}
-              Project: ${{ variables.Octopus.Project }}
+              OctoConnectedServiceName: ${{ variables.OctopusServer }}
+              Space: ${{ variables.OctopusSpace }}
+              Project: ${{ variables.OctopusProject }}
               ReleaseNumber: 'latest'
               Environments: '1.0.$(Build.BuildNumber)'
