@@ -17,7 +17,7 @@ stages:
   - stage: build
     displayName: Build
     jobs:
-      - job: Install libraries
+      - job: install_libraries
         pool:
           vmImage: 'ubuntu-latest'
         steps:
