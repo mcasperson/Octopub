@@ -32,7 +32,7 @@ stages:
                 mkdir -p ~/.m2
                 cd ~/.m2
                 ls -la
-                7z e -aoa ~/repository.7z
+                7z x -aoa ~/repository.7z
                 ls -la
                 ls -la repository
           - task: Bash@3
