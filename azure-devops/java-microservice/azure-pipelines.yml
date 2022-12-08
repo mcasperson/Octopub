@@ -34,7 +34,6 @@ stages:
                 # Verify we did this in the correct dir
                 echo "Local Maven repo"
                 mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
-                cat ~/.m2/settings.xml
           - task: Bash@3
             inputs:
               targetType: inline
