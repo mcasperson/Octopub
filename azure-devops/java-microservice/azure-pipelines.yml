@@ -24,6 +24,17 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
+              script: |
+                sudo apt-get update
+                sudo apt-get install -y p7zip-full
+                curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
+                mkdir -p ~/.m2
+                cd ~/.m2
+                7z e ~/repository.7z
+              workingDirectory: java
+          - task: Bash@3
+            inputs:
+              targetType: inline
               script: ./mvnw clean install --batch-mode -DskipTests
               workingDirectory: java
           - task: Bash@3
@@ -31,6 +42,9 @@ stages:
               targetType: inline
               script: ./mvnw clean package --batch-mode -DskipTests
               workingDirectory: java/products-microservice
+          - publish: '$(Build.ArtifactStagingDirectory)/java/products-microservice/target/products-microservice-runner.jar'
+            displayName: 'Java JAR'
+            artifact: javaJar
   - stage: deploy
     displayName: Deploy
     jobs:
@@ -38,12 +52,14 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          - download: current
+            artifact: javaJar
           - task: OctopusPack@4
             inputs:
               PackageId: 'products-service'
               PackageFormat: 'Zip'
               PackageVersion: '1.0.$(Build.BuildNumber)'
-              SourcePath: 'java/products-microservice/target'
+              SourcePath: '$(Pipeline.Workspace)/javaJar'
               Include: 'products-microservice-runner.jar'
               Overwrite: true
           - task: OctopusPush@5
