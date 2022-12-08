@@ -41,20 +41,20 @@ stages:
               Overwrite: true
           - task: OctopusPush@5
             inputs:
-              OctoConnectedServiceName: ${{ Octopus.Server }}
-              Space: ${{ Octopus.Space }}
+              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
+              Space: ${{ variables.Octopus.Space }}
               Package: 'products-service.1.0.$(Build.BuildNumber).zip'
               Replace: 'true'
           - task: OctopusCreateRelease@5
             inputs:
-              OctoConnectedServiceName: ${{ Octopus.Server }}
-              Space: ${{ Octopus.Space }}
-              ProjectName: ${{ Octopus.Project }}
+              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
+              Space: ${{ variables.Octopus.Space }}
+              ProjectName: ${{ variables.Octopus.Project }}
               ReleaseNumber: '1.0.$(Build.BuildNumber)'
           - task: OctopusDeployRelease@5
             inputs:
-              OctoConnectedServiceName: ${{ Octopus.Server }}
-              Space: ${{ Octopus.Space }}
-              Project: ${{ Octopus.Project }}
+              OctoConnectedServiceName: ${{ variables.Octopus.Server }}
+              Space: ${{ variables.Octopus.Space }}
+              Project: ${{ variables.Octopus.Project }}
               ReleaseNumber: 'latest'
               Environments: '1.0.$(Build.BuildNumber)'
