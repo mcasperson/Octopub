@@ -31,8 +31,10 @@ stages:
                 curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
                 mkdir -p ~/.m2
                 cd ~/.m2
+                ls -la
                 7z e -aoa ~/repository.7z
-              workingDirectory: java
+                ls -la
+                ls -la repository
           - task: Bash@3
             inputs:
               targetType: inline
