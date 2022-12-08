@@ -39,7 +39,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                ./mvnw clean install --batch-mode -DskipTests
+                ./mvnw clean install --batch-mode -DskipTests --settings ./maven/settings.xml
               workingDirectory: java
           - task: Bash@3
             inputs:
