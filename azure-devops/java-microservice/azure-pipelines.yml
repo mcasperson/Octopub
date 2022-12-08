@@ -6,10 +6,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  # This is the name of the Octopus connection defined in Azure DevOps
   - name: OctopusServer
     value: Octopus
+  # This is the ID of the space we are working with
   - name: OctopusSpace
     value: 'Spaces-1370'
+  # This is the ID of the project we are working with
   - name: OctopusProject
     value: 'Projects-3448'
 
@@ -32,8 +35,6 @@ stages:
                 mkdir -p ~/.m2
                 cd ~/.m2
                 7z x -aoa ~/repository.7z
-                # Set the last modified date to now to prevent Maven doing a pom lookup during build.
-                find ~/.m2/repository -exec touch -m {} +
           - task: Bash@3
             displayName: "Install Libraries"
             inputs:
@@ -58,9 +59,12 @@ stages:
         steps:
           - download: current
             artifact: javaJar
+          # The Octopus CLI needs to be installed to support the push, create release, and deploy release steps
           - task: OctoInstaller@5
             inputs:
               version: '*'
+          # Create a package with a filename that captures the package id and version. This package is then
+          # ready to be pused to the Octopus built in feed.
           - task: OctopusPack@4
             inputs:
               PackageId: 'products-service'
@@ -69,22 +73,25 @@ stages:
               SourcePath: '$(Pipeline.Workspace)/javaJar'
               Include: 'products-microservice-runner.jar'
               Overwrite: true
+          # Push the package to the built in feed.
           - task: OctopusPush@5
             inputs:
               OctoConnectedServiceName: ${{ variables.OctopusServer }}
               Space: ${{ variables.OctopusSpace }}
               Package: 'products-service.1.0.$(Build.BuildNumber).zip'
               Replace: 'true'
+          # Create a release in Octopus.
           - task: OctopusCreateRelease@5
             inputs:
               OctoConnectedServiceName: ${{ variables.OctopusServer }}
               Space: ${{ variables.OctopusSpace }}
               ProjectName: ${{ variables.OctopusProject }}
               ReleaseNumber: '1.0.$(Build.BuildNumber)'
+          # Deploy the release in Octopus.
           - task: OctopusDeployRelease@5
             inputs:
               OctoConnectedServiceName: ${{ variables.OctopusServer }}
               Space: ${{ variables.OctopusSpace }}
               Project: ${{ variables.OctopusProject }}
-              ReleaseNumber: 'latest'
-              Environments: '1.0.$(Build.BuildNumber)'
+              ReleaseNumber: '1.0.$(Build.BuildNumber)'
+              Environments: 'Development'
