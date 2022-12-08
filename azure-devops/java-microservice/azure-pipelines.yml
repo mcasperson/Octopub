@@ -43,7 +43,7 @@ stages:
               targetType: inline
               script: ./mvnw clean package --batch-mode -DskipTests
               workingDirectory: java/products-microservice
-          - publish: '$(Build.ArtifactStagingDirectory)/java/products-microservice/target/products-microservice-runner.jar'
+          - publish: '$(Agent.WorkFolder)/java/products-microservice/target/products-microservice-runner.jar'
             displayName: 'Java JAR'
             artifact: javaJar
   - stage: deploy
