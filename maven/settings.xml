@@ -12,6 +12,7 @@
                     <url>http://repo.maven.apache.org/maven2</url>
                     <layout>default</layout>
                     <releases>
+                        <!-- For demos we want this build to be fast, so don't download a bunch of POM files. -->
                         <updatePolicy>never</updatePolicy>
                     </releases>
                 </repository>
