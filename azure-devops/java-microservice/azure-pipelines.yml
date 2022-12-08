@@ -37,13 +37,12 @@ stages:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: |
-                ./mvnw clean install --batch-mode -DskipTests --settings ./maven/settings.xml -Pfast
+              script: ./mvnw clean install --batch-mode -DskipTests --settings ../maven/settings.xml -Pfast
               workingDirectory: java
           - task: Bash@3
             inputs:
               targetType: inline
-              script: ./mvnw clean package --batch-mode -DskipTests --settings ./maven/settings.xml -Pfast
+              script: ./mvnw clean package --batch-mode -DskipTests --settings ../../maven/settings.xml -Pfast
               workingDirectory: java/products-microservice
           - publish: '$(Build.ArtifactStagingDirectory)/java/products-microservice/target/products-microservice-runner.jar'
             displayName: 'Java JAR'
