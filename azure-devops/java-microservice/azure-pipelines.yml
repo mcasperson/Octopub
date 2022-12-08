@@ -17,20 +17,24 @@ stages:
   - stage: build
     displayName: Build
     jobs:
-      - job: install_libraries
+      - job: build_app
         pool:
           vmImage: 'ubuntu-latest'
         steps:
           - task: Bash@3
             inputs:
               targetType: inline
-              script: ./mvnw clean install
+              script: ./mvnw clean install --batch-mode -DskipTests
               workingDirectory: java
           - task: Bash@3
             inputs:
               targetType: inline
-              script: ./mvnw clean package
+              script: ./mvnw clean package --batch-mode -DskipTests
               workingDirectory: java/products-microservice
+      - job: deploy_app
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
           - task: OctopusPack@4
             inputs:
               PackageId: 'products-service'
