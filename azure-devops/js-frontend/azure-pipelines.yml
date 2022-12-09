@@ -1,6 +1,12 @@
 trigger:
-  - main
-  - master
+  branches:
+    include:
+      - main
+      - master
+  paths:
+    include:
+      - js/**/*
+      - azure-devops/js-frontend/*
 
 pool:
   vmImage: ubuntu-latest
