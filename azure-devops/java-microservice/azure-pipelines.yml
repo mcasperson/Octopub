@@ -1,6 +1,13 @@
 trigger:
-  - main
-  - master
+  branches:
+    include:
+    - main
+    - master
+  paths:
+    include:
+      - java/**/*
+      - systemd/java-microservice/*
+      - azure-devops/java-microservice/*
 
 pool:
   vmImage: ubuntu-latest
