@@ -57,19 +57,21 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          # Download the artifact generated in the last stage
           - download: current
             artifact: javaJar
+          # Copy the artifact generated in the last stage back into the working dir
           - task: Bash@3
             displayName: "Copy Artifact"
             inputs:
               targetType: inline
-              script: copy $(Pipeline.Workspace)/javaJar/products-microservice-runner.jar .
+              script: cp $(Pipeline.Workspace)/javaJar/products-microservice-runner.jar .
           # The Octopus CLI needs to be installed to support the push, create release, and deploy release steps
           - task: OctoInstaller@5
             inputs:
               version: '*'
           # Create a package with a filename that captures the package id and version. This package is then
-          # ready to be pused to the Octopus built in feed.
+          # ready to be used to the Octopus built in feed.
           - task: OctopusPack@4
             inputs:
               PackageId: 'products-service'
@@ -80,7 +82,7 @@ stages:
                 products-microservice-runner.jar
                 systemd/java-microservice/products-service.service
               Overwrite: true
-          # Push the package to the built in feed.
+          # Push the package to the built-in feed.
           - task: OctopusPush@5
             inputs:
               OctoConnectedServiceName: ${{ variables.OctopusServer }}
