@@ -59,6 +59,11 @@ stages:
         steps:
           - download: current
             artifact: javaJar
+          - task: Bash@3
+            displayName: "Copy Artifact"
+            inputs:
+              targetType: inline
+              script: copy $(Pipeline.Workspace)/javaJar/products-microservice-runner.jar .
           # The Octopus CLI needs to be installed to support the push, create release, and deploy release steps
           - task: OctoInstaller@5
             inputs:
@@ -70,7 +75,7 @@ stages:
               PackageId: 'products-service'
               PackageFormat: 'Zip'
               PackageVersion: '1.0.$(Build.BuildNumber)'
-              SourcePath: '$(Pipeline.Workspace)/javaJar'
+              SourcePath: '.'
               Include: |
                 products-microservice-runner.jar
                 systemd/java-microservice/products-service.service
