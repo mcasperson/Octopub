@@ -37,13 +37,13 @@ stages:
             displayName: "Install Libraries"
             inputs:
               targetType: inline
-              script: npm install
+              script: yarn install
               workingDirectory: js/frontend
           - task: Bash@3
             displayName: "Build Application"
             inputs:
               targetType: inline
-              script: npm build
+              script: yarn build
               workingDirectory: js/frontend
           - publish: './js/frontend/build'
             displayName: 'Capture Artifacts'
