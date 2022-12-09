@@ -25,6 +25,17 @@ stages:
           vmImage: 'ubuntu-latest'
         steps:
           - task: Bash@3
+            displayName: "Populate Local Maven Repo"
+            inputs:
+              targetType: inline
+              script: |
+                # Download and extract a local maven repo cache. This speeds up build times.
+                # Regenerate this by doing a "./mvnw install" and then "7z a repository.7z -r repository"                
+                curl https://octopus-sales-engineering.s3.ap-southeast-2.amazonaws.com/repository.7z -o ~/repository.7z
+                mkdir -p ~/.m2
+                cd ~/.m2
+                7z x -aoa ~/repository.7z
+          - task: Bash@3
             displayName: "Install Libraries"
             inputs:
               targetType: inline
@@ -60,7 +71,9 @@ stages:
               PackageFormat: 'Zip'
               PackageVersion: '1.0.$(Build.BuildNumber)'
               SourcePath: '$(Pipeline.Workspace)/javaJar'
-              Include: 'products-microservice-runner.jar'
+              Include: |
+                products-microservice-runner.jar
+                systemd/java-microservice/products-service.service
               Overwrite: true
           # Push the package to the built in feed.
           - task: OctopusPush@5
