@@ -5,6 +5,7 @@ steps:
       sudo cp $(Pipeline.Workspace)/javaJar/products-microservice-runner.jar /opt/products-service
 
       # Install the systemd service
+        ls -la $(Build.SourcesDirectory)
       sudo cp $(Build.SourcesDirectory)/Octopub/products-service/systemd/java-microservice/products-service.service /etc/systemd/system
       sudo systemctl daemon-reload
       sudo systemctl restart products-service.service
