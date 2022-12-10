@@ -73,6 +73,7 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
                 - template: systemd-deployment.yaml
   - stage: TestDeploy
     displayName: Deploy to Test
@@ -96,6 +97,7 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
                 - template: systemd-deployment.yaml
   - stage: ProductionDeploy
     displayName: Deploy to Production
@@ -119,4 +121,5 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
                 - template: systemd-deployment.yaml
