@@ -54,8 +54,8 @@ stages:
           - publish: './js/frontend/build'
             displayName: 'Capture Artifacts'
             artifact: jsBuild
-  - stage: deploy
-    displayName: Deploy
+  - stage: DevelopmentDeploy
+    displayName: Deploy to Development
     jobs:
       - deployment: DeployWeb
         displayName: Deploy Web App
@@ -67,4 +67,32 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: sudo cp -r $(Pipeline.Workspace)/jsBuild/* /var/www/html
+                - template: apache-deployment.yaml
+  - stage: TestDeploy
+    displayName: Deploy to Test
+    jobs:
+      - deployment: DeployWeb
+        displayName: Deploy Web App
+        environment:
+          name: Test
+          resourceType: VirtualMachine
+          tags: web
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: apache-deployment.yaml
+  - stage: ProductionDeploy
+    displayName: Deploy to Production
+    jobs:
+      - deployment: DeployWeb
+        displayName: Deploy Web App
+        environment:
+          name: Production
+          resourceType: VirtualMachine
+          tags: web
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: apache-deployment.yaml
