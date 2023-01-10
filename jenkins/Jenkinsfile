@@ -95,7 +95,7 @@ pipeline {
     }
     stage('Repackage') {
       steps {
-        dir("${env.WORKSPACE}/java") {
+        dir("${env.WORKSPACE}/java/products-microservice") {
           // This scans through the build tool output directory and find the largest file, which we assume is the artifact that was intended to be deployed.
           // The path to this file is saved in and environment variable called JAVA_ARTIFACT, which can be consumed by subsequent custom deployment steps.
           script {
