@@ -99,31 +99,31 @@ pipeline {
           // This scans through the build tool output directory and find the largest file, which we assume is the artifact that was intended to be deployed.
           // The path to this file is saved in and environment variable called JAVA_ARTIFACT, which can be consumed by subsequent custom deployment steps.
           script {
-              // Find the matching artifacts
-              def extensions = ['jar', 'war']
-              def files = []
-              for(extension in extensions){
+            // Find the matching artifacts
+            def extensions = ['jar', 'war']
+            def files = []
+            for(extension in extensions) {
               findFiles(glob: 'target/**.' + extension).each{files << it}
             }
-            echo 'Found ' + files.size() + ' potential artifacts'
-            // Assume the largest file is the artifact we intend to deploy
-            def largestFile = null
-            for (i = 0; i < files.size(); ++i) {
-              if (largestFile == null || files[i].length > largestFile.length) {
-                largestFile = files[i]
-              }
-            }
-            if (largestFile != null) {
-              env.ORIGINAL_ARTIFACT = largestFile.path
-              // Create a filename based on the repository name, the new version, and the original file extension.
-              env.ARTIFACTS = "OctopubProducts." + env.VERSION_SEMVER + largestFile.path.substring(largestFile.path.lastIndexOf("."), largestFile.path.length())
-              echo 'Found artifact at ' + largestFile.path
-              echo 'This path is available from the ARTIFACTS environment variable.'
-            }
-          }
-          // Octopus requires files to have a specific naming format. So copy the original artifact into a file with the correct name.
-          sh(script: 'cp ${ORIGINAL_ARTIFACT} ${ARTIFACTS}')
-        }
+	          echo 'Found ' + files.size() + ' potential artifacts'
+	          // Assume the largest file is the artifact we intend to deploy
+	          def largestFile = null
+	          for (i = 0; i < files.size(); ++i) {
+	            if (largestFile == null || files[i].length > largestFile.length) {
+	              largestFile = files[i]
+	            }
+	          }
+	          if (largestFile != null) {
+	            env.ORIGINAL_ARTIFACT = largestFile.path
+	            // Create a filename based on the repository name, the new version, and the original file extension.
+	            env.ARTIFACTS = "OctopubProducts." + env.VERSION_SEMVER + largestFile.path.substring(largestFile.path.lastIndexOf("."), largestFile.path.length())
+	            echo 'Found artifact at ' + largestFile.path
+	            echo 'This path is available from the ARTIFACTS environment variable.'
+	          }
+		        // Octopus requires files to have a specific naming format. So copy the original artifact into a file with the correct name.
+		        sh(script: 'cp ${ORIGINAL_ARTIFACT} ${ARTIFACTS}')
+		      }
+	      }
       }
     }
     stage('Deployment') {
