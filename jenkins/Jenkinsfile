@@ -39,7 +39,7 @@ pipeline {
               This is from the Jenkins "Global Variable Reference" documentation:
               SCM-specific variables such as GIT_COMMIT are not automatically defined as environment variables; rather you can use the return value of the checkout step.
             */
-            def checkoutVars = checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/mcasperson/Octopub.git']]])
+            def checkoutVars = checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/mcasperson/Octopub.git']]])
             env.GIT_URL = checkoutVars.GIT_URL
             env.GIT_COMMIT = checkoutVars.GIT_COMMIT
             env.GIT_BRANCH = checkoutVars.GIT_BRANCH
