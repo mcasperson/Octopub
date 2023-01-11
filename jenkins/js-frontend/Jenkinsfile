@@ -19,6 +19,9 @@ pipeline {
     string(defaultValue: 'Octopus', description: '', name: 'ServerId', trim: true)
   }
   agent 'any'
+  tools {
+    jdk 'Node'
+  }
   stages {
     /*
       The OctoCLI tool has been defined with the Custom Tools plugin: https://plugins.jenkins.io/custom-tools-plugin/
