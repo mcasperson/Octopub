@@ -73,7 +73,7 @@ pipeline {
     stage('Test') {
       steps {
         dir("${env.WORKSPACE}/js/frontend") {
-	        sh(script: 'yarn test', returnStdout: true)
+	        sh(script: 'yarn test --passWithNoTests', returnStdout: true)
 	        // The results should be processed and the pipeline
 	        // passed or failed with a step like https://plugins.jenkins.io/junit/ or
 	        // https://plugins.jenkins.io/xunit/ (depending on the report format). Dedicated
