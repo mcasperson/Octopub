@@ -20,7 +20,7 @@ pipeline {
   }
   agent 'any'
   tools {
-    jdk 'Node'
+    nodejs 'Node'
   }
   stages {
     /*
