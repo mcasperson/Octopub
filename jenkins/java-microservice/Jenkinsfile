@@ -37,6 +37,7 @@ pipeline {
         steps {
             sh "echo \"OctoCLI: ${tool('OctoCLI')}\""
             sh "echo \"GraalVM: ${tool('GraalVM')}\""
+            sh "${tool('GraalVM')}\bin\gu install native-image"
         }
     }
     stage('Environment') {
