@@ -36,6 +36,7 @@ pipeline {
     stage ('Add tools') {
         steps {
             sh "echo \"OctoCLI: ${tool('OctoCLI')}\""
+            sh "echo \"GraalVM: ${tool('GraalVM')}\""
         }
     }
     stage('Environment') {
@@ -156,7 +157,7 @@ pipeline {
     stage('Package Lambda') {
       steps {
         dir("${env.WORKSPACE}/java") {
-          sh(script: './mvnw --batch-mode package -DskipTests -P "lambda,native" -Dquarkus.profile=faas')
+          sh(script: 'GRAALVM_HOME=${tool('GraalVM')} ./mvnw --batch-mode package -DskipTests -P "lambda,native" -Dquarkus.profile=faas')
         }
       }
     }
