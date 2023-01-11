@@ -158,7 +158,7 @@ pipeline {
     stage('Package Lambda') {
       steps {
         dir("${env.WORKSPACE}/java") {
-          sh(script: "GRAALVM_HOME=${tool('GraalVM')} ./mvnw --batch-mode package -DskipTests -P 'lambda,native' -Dquarkus.profile=faas -Dquarkus.native.native-image-xmx=6g")
+          sh(script: "GRAALVM_HOME=${tool('GraalVM')} ./mvnw --batch-mode package -DskipTests -P 'lambda,native' -Dquarkus.profile=faas")
         }
       }
     }
