@@ -119,7 +119,7 @@ pipeline {
 	              includePaths: "**/*.html\n**/*.htm\n**/*.css\n**/*.js\n**/*.min\n**/*.map\n**/*.sql\n**/*.png\n**/*.jpg\n**/*.jpeg\n**/*.gif\n**/*.json\n**/*.env\n**/*.txt\n**/Procfile",
 	              overwriteExisting: true,
 	              packageFormat: 'zip',
-	              packageId: 'example-yarn-package',
+	              packageId: 'OctopubFrontend',
 	              packageVersion: env.VERSION_SEMVER,
 	              toolId: 'Default',
 	              verboseLogging: false)
